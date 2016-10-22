@@ -11,7 +11,7 @@ import java.util.Iterator;
  *
  * @param <E> Any object
  */
-public class DiscreteSet<E> extends AbstractSet<E>{
+public class DiscreteSet<E extends Object> extends AbstractSet<E>{
 
 	private transient HashMap<E, Object> map;
 	private static final Object PRESENT = new Object();
@@ -64,6 +64,12 @@ public class DiscreteSet<E> extends AbstractSet<E>{
 		return newset;
 	}
 	
+	/**
+	 * Creates the powerset. Doesn't alter state date, creates
+	 * a new instance of a DiscreteSet
+	 * 
+	 * @return The powerset of the set
+	 */
 	public DiscreteSet<DiscreteSet<E>> powerSet() {
 		DiscreteSet<DiscreteSet<E>> ps = new DiscreteSet<>();
 		ps.add(new DiscreteSet<>());
@@ -81,6 +87,22 @@ public class DiscreteSet<E> extends AbstractSet<E>{
 			ps = newPs;
 		}
 		return ps;
+	}
+	
+	/**
+	 * Performs the cross product with another set.
+	 * 
+	 * @param other  The set to perform the action with
+	 * @return  The cross product of two sets
+	 */
+	public <F> DiscreteSet<OrderedPair<E, F>> cross(DiscreteSet<F> other) {
+		DiscreteSet<OrderedPair<E, F>> cp = new DiscreteSet<>();
+		for (E e: this) {
+			for (F o: other) {
+				cp.add(new OrderedPair<E, F>(e, o));
+			}
+		}
+		return cp;
 	}
 	
 	/**
