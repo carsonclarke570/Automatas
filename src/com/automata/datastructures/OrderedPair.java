@@ -7,7 +7,7 @@ package com.automata.datastructures;
  *
  * @param <E> Type of ordered pair objects
  */
-public class OrderedPair<E, F> {
+public class OrderedPair<E extends Comparable<E>, F extends Comparable<F>> implements Comparable<OrderedPair<E, F>>{
 	
 	private E x;
 	private F y;
@@ -34,5 +34,13 @@ public class OrderedPair<E, F> {
 	
 	public String toString() {
 		return "("+ x.toString() +", " + y.toString() + ")";
+	}
+
+	@Override
+	public int compareTo(OrderedPair<E, F> o) {
+		if (getFirst().compareTo(o.getFirst()) != 0 || getSecond().compareTo(o.getSecond()) != 0) {
+			return -1;
+		}
+		return 0;
 	}
 }

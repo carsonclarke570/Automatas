@@ -11,7 +11,7 @@ import java.util.Iterator;
  *
  * @param <E> Any object
  */
-public class DiscreteSet<E extends Object> extends AbstractSet<E>{
+public class DiscreteSet<E extends Comparable<E>> extends AbstractSet<E> implements Comparable<DiscreteSet<E>>{
 
 	private transient HashMap<E, Object> map;
 	private static final Object PRESENT = new Object();
@@ -23,6 +23,11 @@ public class DiscreteSet<E extends Object> extends AbstractSet<E>{
 		map = new HashMap<>();
 	}
 	
+	/**
+	 * Creates a new DiscreteSet from a collection of objects
+	 * 
+	 * @param c The collection to build the set from
+	 */
 	public DiscreteSet(Collection<? extends E> c) {
 		this();
 		for (E e: c) {
@@ -95,7 +100,7 @@ public class DiscreteSet<E extends Object> extends AbstractSet<E>{
 	 * @param other  The set to perform the action with
 	 * @return  The cross product of two sets
 	 */
-	public <F> DiscreteSet<OrderedPair<E, F>> cross(DiscreteSet<F> other) {
+	public <F extends Comparable<F>> DiscreteSet<OrderedPair<E, F>> cross(DiscreteSet<F> other) {
 		DiscreteSet<OrderedPair<E, F>> cp = new DiscreteSet<>();
 		for (E e: this) {
 			for (F o: other) {
@@ -103,6 +108,21 @@ public class DiscreteSet<E extends Object> extends AbstractSet<E>{
 			}
 		}
 		return cp;
+	}
+	
+	/**
+	 * Checks if this set is a subset of another.
+	 * 
+	 * @param other Set to check if this set is a subset of
+	 * @return True if this is a subset of other
+	 */
+	public boolean isSubsetOf(DiscreteSet<E> other) {
+		for (E e: this) {
+			if (!other.contains(e)) {
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	/**
@@ -159,6 +179,18 @@ public class DiscreteSet<E extends Object> extends AbstractSet<E>{
 	@Override
 	public int size() {
 		return map.size();
+	}
+
+	/**
+	 * Compares whether two sets are equal
+	 * 
+	 * @return -1 if unequal, 0 if equal
+	 */
+	public int compareTo(DiscreteSet<E> o) {
+		if (!(isSubsetOf(o) && o.isSubsetOf(this))) {
+			return -1;
+		}
+		return 0;
 	}
 
 	
