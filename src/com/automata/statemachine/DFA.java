@@ -17,7 +17,7 @@ public abstract class DFA {
 
 	private DiscreteSet<Integer> states, finalstates;
 	private DiscreteSet<Character> alphabet;
-	private String startState;
+	private int startState;
 	
 	/**
 	 * Constructs a DFA.
@@ -28,11 +28,35 @@ public abstract class DFA {
 	 * in the set of states.
 	 * @param finalStates The set of accept states. Must be a subset of of states
 	 */
-	public DFA(DiscreteSet<Integer> states, DiscreteSet<Character> alphabet, String startState, DiscreteSet<Integer> finalStates) {
+	public DFA(DiscreteSet<Integer> states, DiscreteSet<Character> alphabet, int startState, DiscreteSet<Integer> finalStates) throws DFACompletenessException {
 		this.states = states;
 		this.alphabet = alphabet;
 		this.startState = startState;
 		this.finalstates = finalStates;
+		if (!ensureCompleteness()) {
+			throw new DFACompletenessException();
+		}
+	}
+	
+	/**
+	 * Reads a string and then returns true if it accepts or false
+	 * if it rejects
+	 * 
+	 * @param s The String to run
+	 * @return True if the string accepts false if otherwise
+	 * @throws DFACompletenessException If the DFA being run is incomplete
+	 */
+	public boolean run(String s) {
+		char startC = ' ';
+		int startS = startState;
+		for (int i = 0; i < s.length(); i++) {
+			startC = s.charAt(i);
+			if (!alphabet.contains(startC)) {
+				return false;
+			}
+			startS = transition(startS, startC);
+		}
+		return finalstates.contains(startS);
 	}
 	
 	/**
@@ -59,5 +83,14 @@ public abstract class DFA {
 			}
 		}
 		return res;
+	}
+	
+	/**
+	 * Returns if the DFAs constructor was used correctly
+	 * 
+	 * @return If the DFA was constructed properly
+	 */
+	public boolean ensureCompleteness() {
+		return states.contains(startState) &&  finalstates.isSubsetOf(states);
 	}
 }
