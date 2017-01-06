@@ -35,6 +35,7 @@ public class DiscreteSet<E extends Comparable<E>> extends AbstractSet<E> impleme
 		}
 	}
 	
+	
 	/**
 	 * Performs the union operation. Doesn't alter state data, creates 
 	 * a new instance of a DiscreteSet
