@@ -28,13 +28,13 @@ public abstract class NFA {
 	 * in the set of states.
 	 * @param finalStates The set of accept states. Must be a subset of of states
 	 */
-	public NFA(Set<Integer> states, Set<Character> alphabet, int startState, Set<Integer> finalStates) throws FACompletenessException {
+	public NFA(Set<Integer> states, Set<Character> alphabet, int startState, Set<Integer> finalStates) throws CompletenessException {
 		this.states = states;
 		this.alphabet = alphabet;
 		this.startState = startState;
 		this.finalstates = finalStates;
 		if (!ensureCompleteness()) {
-			throw new FACompletenessException();
+			throw new CompletenessException();
 		}
 	}
 	
@@ -57,6 +57,9 @@ public abstract class NFA {
 		currentStates = eStates;
 		
 		for(int i = 0; i < s.length(); i++) {
+			if (!alphabet.contains(s.charAt(i))) {
+				return false;
+			}
 			Set<Integer> nextStates = new Set<Integer>();
 			Set<Integer> emptyStates = new Set<Integer>();
 			for (int j: currentStates) {

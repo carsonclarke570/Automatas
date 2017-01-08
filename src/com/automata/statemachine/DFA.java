@@ -28,13 +28,13 @@ public abstract class DFA {
 	 * in the set of states.
 	 * @param finalStates The set of accept states. Must be a subset of of states
 	 */
-	public DFA(Set<Integer> states, Set<Character> alphabet, int startState, Set<Integer> finalStates) throws FACompletenessException {
+	public DFA(Set<Integer> states, Set<Character> alphabet, int startState, Set<Integer> finalStates) throws CompletenessException {
 		this.states = states;
 		this.alphabet = alphabet;
 		this.startState = startState;
 		this.finalstates = finalStates;
 		if (!ensureCompleteness()) {
-			throw new FACompletenessException();
+			throw new CompletenessException();
 		}
 	}
 	
