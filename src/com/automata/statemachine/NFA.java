@@ -2,7 +2,7 @@ package com.automata.statemachine;
 
 import java.util.HashMap;
 
-import com.automata.datastructures.DiscreteSet;
+import com.automata.datastructures.Set;
 import com.automata.datastructures.OrderedPair;
 
 /**
@@ -15,8 +15,8 @@ import com.automata.datastructures.OrderedPair;
  */
 public abstract class NFA {
 
-	private DiscreteSet<Integer> states, finalstates;
-	private DiscreteSet<Character> alphabet;
+	private Set<Integer> states, finalstates;
+	private Set<Character> alphabet;
 	private int startState;
 	
 	/**
@@ -28,7 +28,7 @@ public abstract class NFA {
 	 * in the set of states.
 	 * @param finalStates The set of accept states. Must be a subset of of states
 	 */
-	public NFA(DiscreteSet<Integer> states, DiscreteSet<Character> alphabet, int startState, DiscreteSet<Integer> finalStates) throws FACompletenessException {
+	public NFA(Set<Integer> states, Set<Character> alphabet, int startState, Set<Integer> finalStates) throws FACompletenessException {
 		this.states = states;
 		this.alphabet = alphabet;
 		this.startState = startState;
@@ -47,24 +47,24 @@ public abstract class NFA {
 	 * @throws DFACompletenessException If the DFA being run is incomplete
 	 */
 	public boolean run(String s) {
-		DiscreteSet<Integer> currentStates = new DiscreteSet<Integer>() ;
+		Set<Integer> currentStates = new Set<Integer>() ;
 		currentStates.add(startState);
-		DiscreteSet<Integer> eStates = new DiscreteSet<Integer>() ;
+		Set<Integer> eStates = new Set<Integer>() ;
 		for (int i: currentStates) {
-			DiscreteSet<Integer> temp = eMove(i);
+			Set<Integer> temp = eMove(i);
 			eStates = eStates.union(temp);
 		}
 		currentStates = eStates;
 		
 		for(int i = 0; i < s.length(); i++) {
-			DiscreteSet<Integer> nextStates = new DiscreteSet<Integer>();
-			DiscreteSet<Integer> emptyStates = new DiscreteSet<Integer>();
+			Set<Integer> nextStates = new Set<Integer>();
+			Set<Integer> emptyStates = new Set<Integer>();
 			for (int j: currentStates) {
-				DiscreteSet<Integer> temp = eMove(j);
+				Set<Integer> temp = eMove(j);
 				emptyStates = emptyStates.union(temp);
 			}
 			for (int j: emptyStates) {
-				DiscreteSet<Integer> temp = transition(j, s.charAt(i));
+				Set<Integer> temp = transition(j, s.charAt(i));
 				if (temp != null) {
 					nextStates = nextStates.union(temp);
 				}
@@ -84,7 +84,7 @@ public abstract class NFA {
 	 * @return The set of transitioned state numbers or null if there is no 
 	 * transition for a given character 
 	 */
-	public abstract DiscreteSet<Integer> transition(int q, char a);
+	public abstract Set<Integer> transition(int q, char a);
 	
 	/**
 	 * Defines the empty string transition of each state. In other words, the
@@ -94,15 +94,15 @@ public abstract class NFA {
 	 * @param q The state to transition from
 	 * @return The set of states reachable from q using empty string transitions
 	 */
-	public abstract DiscreteSet<Integer> eMove(int q);
+	public abstract Set<Integer> eMove(int q);
 	
 	/**
 	 * Creates a transition table from the transition function
 	 * 
 	 * @return A transition table
 	 */
-	public HashMap<OrderedPair<Integer, Character>, DiscreteSet<Integer>> transitionTable() {
-		HashMap<OrderedPair<Integer, Character>, DiscreteSet<Integer>> res = new HashMap<>();
+	public HashMap<OrderedPair<Integer, Character>, Set<Integer>> transitionTable() {
+		HashMap<OrderedPair<Integer, Character>, Set<Integer>> res = new HashMap<>();
 		for (int s: states) {
 			for (char c: alphabet) {
 				res.put(new OrderedPair<Integer, Character>(s, c), transition(s, c));

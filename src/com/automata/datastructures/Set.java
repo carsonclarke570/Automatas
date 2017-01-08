@@ -5,30 +5,30 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 /**
- * A helper data structure that functions as a discrete math set
+ * A helper data structure that functions as a set
  * 
  * @author Carson Clarke-Magrab
  *
  * @param <E> Any object
  */
-public class DiscreteSet<E extends Comparable<E>> extends AbstractSet<E> implements Comparable<DiscreteSet<E>>{
+public class Set<E extends Comparable<E>> extends AbstractSet<E> implements Comparable<Set<E>>{
 
 	private transient HashMap<E, Object> map;
 	private static final Object PRESENT = new Object();
 	
 	/**
-	 * Creates a new DiscreteSet
+	 * Creates a new Set
 	 */
-	public DiscreteSet() {
+	public Set() {
 		map = new HashMap<>();
 	}
 	
 	/**
-	 * Creates a new DiscreteSet from a collection of objects
+	 * Creates a new Set from a collection of objects
 	 * 
 	 * @param c The collection to build the set from
 	 */
-	public DiscreteSet(Collection<? extends E> c) {
+	public Set(Collection<? extends E> c) {
 		this();
 		for (E e: c) {
 			add(e);
@@ -38,13 +38,13 @@ public class DiscreteSet<E extends Comparable<E>> extends AbstractSet<E> impleme
 	
 	/**
 	 * Performs the union operation. Doesn't alter state data, creates 
-	 * a new instance of a DiscreteSet
+	 * a new instance of a Set
 	 * 
 	 * @param other The set to perform the union with
 	 * @return the newly created set
 	 */
-	public DiscreteSet<E> union(DiscreteSet<E> other) {
-		DiscreteSet<E> newset = new DiscreteSet<>();
+	public Set<E> union(Set<E> other) {
+		Set<E> newset = new Set<>();
 		newset.addAll(this);
 		newset.addAll(other);
 		return newset;
@@ -53,13 +53,13 @@ public class DiscreteSet<E extends Comparable<E>> extends AbstractSet<E> impleme
 	
 	/**
 	 * Performs the intersect operation. Doesn't alter state date, creates
-	 * a new instance of a DiscreteSet
+	 * a new instance of a Set
 	 * 
 	 * @param other  The set to intersect with
 	 * @return The newly created set
 	 */
-	public DiscreteSet<E> intersect(DiscreteSet<E> other) {
-		DiscreteSet<E> newset = new DiscreteSet<>();
+	public Set<E> intersect(Set<E> other) {
+		Set<E> newset = new Set<>();
 		Iterator<E> i = iterator();
 		while(i.hasNext()) {
 			E e = i.next();
@@ -72,21 +72,21 @@ public class DiscreteSet<E extends Comparable<E>> extends AbstractSet<E> impleme
 	
 	/**
 	 * Creates the powerset. Doesn't alter state date, creates
-	 * a new instance of a DiscreteSet
+	 * a new instance of a Set
 	 * 
 	 * @return The powerset of the set
 	 */
-	public DiscreteSet<DiscreteSet<E>> powerSet() {
-		DiscreteSet<DiscreteSet<E>> ps = new DiscreteSet<>();
-		ps.add(new DiscreteSet<>());
+	public Set<Set<E>> powerSet() {
+		Set<Set<E>> ps = new Set<>();
+		ps.add(new Set<>());
 		
 		for (E e: this) {
-			DiscreteSet<DiscreteSet<E>> newPs = new DiscreteSet<>();
+			Set<Set<E>> newPs = new Set<>();
 			
-			for (DiscreteSet<E> subset: ps) {
+			for (Set<E> subset: ps) {
 				newPs.add(subset);
 				
-				DiscreteSet<E> newSubset = new DiscreteSet<>(subset);
+				Set<E> newSubset = new Set<>(subset);
 				newSubset.add(e);
 				newPs.add(newSubset);
 			}
@@ -101,8 +101,8 @@ public class DiscreteSet<E extends Comparable<E>> extends AbstractSet<E> impleme
 	 * @param other  The set to perform the action with
 	 * @return  The cross product of two sets
 	 */
-	public <F extends Comparable<F>> DiscreteSet<OrderedPair<E, F>> cross(DiscreteSet<F> other) {
-		DiscreteSet<OrderedPair<E, F>> cp = new DiscreteSet<>();
+	public <F extends Comparable<F>> Set<OrderedPair<E, F>> cross(Set<F> other) {
+		Set<OrderedPair<E, F>> cp = new Set<>();
 		for (E e: this) {
 			for (F o: other) {
 				cp.add(new OrderedPair<E, F>(e, o));
@@ -117,7 +117,7 @@ public class DiscreteSet<E extends Comparable<E>> extends AbstractSet<E> impleme
 	 * @param other Set to check if this set is a subset of
 	 * @return True if this is a subset of other
 	 */
-	public boolean isSubsetOf(DiscreteSet<E> other) {
+	public boolean isSubsetOf(Set<E> other) {
 		for (E e: this) {
 			if (!other.contains(e)) {
 				return false;
@@ -172,12 +172,16 @@ public class DiscreteSet<E extends Comparable<E>> extends AbstractSet<E> impleme
 		return map.remove(o) != null;
 	}
 	
-	@Override
+	/**
+	 * Returns an iterator over the set
+	 */
 	public Iterator<E> iterator() {
 		return map.keySet().iterator();
 	}
 
-	@Override
+	/**
+	 * Returns the size of the set
+	 */
 	public int size() {
 		return map.size();
 	}
@@ -187,7 +191,7 @@ public class DiscreteSet<E extends Comparable<E>> extends AbstractSet<E> impleme
 	 * 
 	 * @return -1 if unequal, 0 if equal
 	 */
-	public int compareTo(DiscreteSet<E> o) {
+	public int compareTo(Set<E> o) {
 		if (!(isSubsetOf(o) && o.isSubsetOf(this))) {
 			return -1;
 		}

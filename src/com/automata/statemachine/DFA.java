@@ -2,7 +2,7 @@ package com.automata.statemachine;
 
 import java.util.HashMap;
 
-import com.automata.datastructures.DiscreteSet;
+import com.automata.datastructures.Set;
 import com.automata.datastructures.OrderedPair;
 
 /**
@@ -15,8 +15,8 @@ import com.automata.datastructures.OrderedPair;
  */
 public abstract class DFA {
 
-	private DiscreteSet<Integer> states, finalstates;
-	private DiscreteSet<Character> alphabet;
+	private Set<Integer> states, finalstates;
+	private Set<Character> alphabet;
 	private int startState;
 	
 	/**
@@ -28,7 +28,7 @@ public abstract class DFA {
 	 * in the set of states.
 	 * @param finalStates The set of accept states. Must be a subset of of states
 	 */
-	public DFA(DiscreteSet<Integer> states, DiscreteSet<Character> alphabet, int startState, DiscreteSet<Integer> finalStates) throws FACompletenessException {
+	public DFA(Set<Integer> states, Set<Character> alphabet, int startState, Set<Integer> finalStates) throws FACompletenessException {
 		this.states = states;
 		this.alphabet = alphabet;
 		this.startState = startState;
